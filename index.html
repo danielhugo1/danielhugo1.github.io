@@ -12,21 +12,26 @@
 <body class="bg-slate-50 text-slate-800">
   <div class="max-w-5xl mx-auto p-6">
 
-    <!-- HEADER com logo -->
+    <!-- HEADER com logo inline (sempre carrega) -->
     <header class="mb-6">
       <div class="flex items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl md:text-3xl font-bold">Extrator de Códigos de Planilhas</h1>
           <p class="text-sm md:text-base text-slate-600 mt-1">
-            Carregue várias planilhas (.xlsx, .xls, .csv). O app lê todas as abas e extrai códigos usando um padrão (regex) configurável.
-            Funciona 100% no navegador — ideal para GitHub Pages.
+            Carregue várias planilhas (.xlsx, .xls, .csv). O app lê todas as abas e extrai códigos usando um padrão (regex)
+            configurável. Funciona 100% no navegador — ideal para GitHub Pages.
           </p>
         </div>
-        <img src="https://logodownload.org/wp-content/uploads/2014/02/correios-logo-1.png" alt="Correios" class="h-12 w-auto opacity-90 select-none" />
+        <!-- “logo Correios” genérico (SVG inline) -->
+        <svg class="h-12 w-auto opacity-90 select-none" viewBox="0 0 180 40" aria-label="Correios">
+          <rect x="0" y="0" width="180" height="40" rx="6" fill="#005BBB"></rect>
+          <polygon points="12,20 28,6 28,20 12,34" fill="#FFD500"></polygon>
+          <text x="40" y="26" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="white">Correios</text>
+        </svg>
       </div>
     </header>
 
-    <!-- Configurações -->
+    <!-- CONFIGURAÇÕES (extrator) -->
     <section class="grid md:grid-cols-2 gap-4 mb-6">
       <div class="bg-white rounded-2xl shadow p-4">
         <h2 class="font-semibold mb-3">Padrão de extração</h2>
@@ -65,7 +70,7 @@
       </div>
     </section>
 
-    <!-- Resultado do Extrator -->
+    <!-- RESULTADOS -->
     <section class="bg-white rounded-2xl shadow p-4 mb-6">
       <h2 class="font-semibold mb-3">Resultados</h2>
       <div class="flex flex-wrap gap-2 mb-3">
@@ -89,12 +94,16 @@
     <!-- SRO interno: gerador de links -->
     <section class="bg-white rounded-2xl shadow p-4 mb-6">
       <h2 class="font-semibold mb-3">SRO interno — Gerar links rápidos</h2>
-      <p class="text-sm text-slate-600 mb-3">Cole os códigos e gere links para o rastreamento <em>interno</em>. Funciona apenas na rede dos Correios.</p>
+      <p class="text-sm text-slate-600 mb-3">
+        Cole os códigos e gere links para o rastreamento <em>interno</em>. Funciona apenas na rede dos Correios.
+      </p>
       <div class="grid md:grid-cols-3 gap-3 mb-3">
         <div class="md:col-span-2">
           <label class="block text-sm mb-1">Base URL do SRO interno</label>
           <input id="sroBaseUrl" class="w-full border rounded-lg p-2 font-mono" value="https://srointranet.correios.com.br/rastreamento?obj=" />
-          <p class="text-xs text-slate-500 mt-1">Ex.: <span class="font-mono">https://srointranet.correios.com.br/rastreamento?obj=</span></p>
+          <p class="text-xs text-slate-500 mt-1">
+            Ex.: <span class="font-mono">https://srointranet.correios.com.br/rastreamento?obj=</span>
+          </p>
         </div>
         <div class="md:col-span-1 flex items-end">
           <button id="btnSaveSRO" class="w-full px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg">Salvar base</button>
@@ -116,13 +125,13 @@ XX987654321BR
           <ul id="sroList" class="border rounded-lg p-3 h-40 overflow-auto text-sm"></ul>
         </div>
       </div>
-      <p class="text-xs text-slate-500 mt-3">Dica: “Abrir todos” usa intervalo para evitar bloqueios do navegador.</p>
+      <p class="text-xs text-slate-500 mt-3">“Abrir todos” usa intervalo para evitar bloqueios do navegador.</p>
     </section>
 
-    <!-- Rastreamento automático (intranet) – opcional; sem "Minhas Unidades" -->
+    <!-- Rastreamento automático (intranet) – sem "Minhas Unidades" -->
     <section class="bg-white rounded-2xl shadow p-4 mb-6">
       <h2 class="font-semibold mb-3">Rastreamento automático — Intranet (opcional)</h2>
-      <p class="text-sm text-slate-600 mb-3">Depende de um <strong>proxy</strong> interno. Se não tiver, use o módulo “Rastreamento por CSV (sem TI)” logo abaixo.</p>
+      <p class="text-sm text-slate-600 mb-3">Depende de um <strong>proxy</strong> interno. Se não tiver, use o módulo “Rastreamento por CSV (sem TI)” abaixo.</p>
 
       <div class="grid md:grid-cols-3 gap-4 mb-4">
         <div>
@@ -239,8 +248,14 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
     <footer class="text-xs text-slate-500">
       <p>⚠️ Tudo roda localmente no seu navegador. Nenhum dado é enviado a servidores.</p>
       <div class="mt-2 flex items-center gap-2">
-        <img src="https://logodownload.org/wp-content/uploads/2014/02/correios-logo-1.png" alt="Correios" class="h-5 w-auto opacity-90" />
-        <span>Desenvolvido por <strong>Daniel Hugo Costa de Oliveira</strong> — <strong>Coordenador/UO</strong> — <strong>GERAE-RN</strong></span>
+        <svg class="h-5 w-auto opacity-90" viewBox="0 0 180 40" aria-label="Correios">
+          <rect x="0" y="0" width="180" height="40" rx="6" fill="#005BBB"></rect>
+          <polygon points="12,20 28,6 28,20 12,34" fill="#FFD500"></polygon>
+          <text x="40" y="26" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="white">Correios</text>
+        </svg>
+        <span>
+          Desenvolvido por <strong>Daniel Hugo Costa de Oliveira</strong> — <strong>Coordenador/UO</strong> — <strong>GERAE-RN</strong>
+        </span>
       </div>
     </footer>
   </div>
@@ -249,15 +264,15 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
     // ----------------- UTILIDADES -----------------
     function makeRegex(preset, custom) {
       switch (preset) {
-        case 'sro':    return /\\b[A-Z]{2}\\d{9}[A-Z]{2}\\b/g;
-        case 'digits': return /\\b\\d{8,13}\\b/g;
-        case 'alnum':  return /\\b[A-Z0-9]{10,}\\b/gi;
+        case 'sro':    return /\b[A-Z]{2}\d{9}[A-Z]{2}\b/g; // LB123456789BR
+        case 'digits': return /\b\d{8,13}\b/g;
+        case 'alnum':  return /\b[A-Z0-9]{10,}\b/gi;
         case 'custom':
         default:
           try { return new RegExp(custom, 'gi'); } catch { return /$a/; }
       }
     }
-    function toCSV(rows) { return rows.map(r => '"' + String(r).replace(/"/g, '""') + '"').join('\\n'); }
+    function toCSV(rows) { return rows.map(r => '"' + String(r).replace(/"/g, '""') + '"').join('\n'); }
     function download(filename, content, mime = 'text/plain;charset=utf-8') {
       const blob = new Blob([content], { type: mime });
       const url = URL.createObjectURL(blob);
@@ -276,8 +291,14 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
       a.href = url; a.download = 'codigos.xlsx'; a.click();
       URL.revokeObjectURL(url);
     }
-    function todayISO(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-    function todayBR(){ const d = new Date(); return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear(); }
+    function todayISO(){
+      const d = new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), da=String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${da}`;
+    }
+    function todayBR(){
+      const d = new Date(), da=String(d.getDate()).padStart(2,'0'), m=String(d.getMonth()+1).padStart(2,'0'), y=d.getFullYear();
+      return `${da}/${m}/${y}`;
+    }
 
     // ----------------- ESTADO (Extrator) -----------------
     let collected = [];
@@ -307,16 +328,16 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
       [btnCopy, btnExportCSV, btnExportXLSX].forEach(b => b.disabled = !enable);
     }
     function updateUI() {
-      outputEl.value = collected.join('\\n');
+      outputEl.value = collected.join('\n');
       countEl.textContent = String(collected.length);
       enableActions(collected.length > 0);
     }
 
     // Presets atualizam regex
     presetEl.addEventListener('change', () => {
-      if (presetEl.value === 'sro')    regexEl.value = "\\\\b[A-Z]{2}\\\\d{9}[A-Z]{2}\\\\b";
-      if (presetEl.value === 'digits') regexEl.value = "\\\\b\\\\d{8,13}\\\\b";
-      if (presetEl.value === 'alnum')  regexEl.value = "\\\\b[A-Z0-9]{10,}\\\\b";
+      if (presetEl.value === 'sro')    regexEl.value = "\\b[A-Z]{2}\\d{9}[A-Z]{2}\\b";
+      if (presetEl.value === 'digits') regexEl.value = "\\b\\d{8,13}\\b";
+      if (presetEl.value === 'alnum')  regexEl.value = "\\b[A-Z0-9]{10,}\\b";
     });
 
     // Dropzone
@@ -333,7 +354,6 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
     async function processFiles(files) {
       collected = []; updateUI(); logEl.textContent = '';
       const rx = makeRegex(presetEl.value, regexEl.value);
-
       const buffers = [];
       for (const f of files) buffers.push({ name: f.name, buf: await f.arrayBuffer() });
 
@@ -344,24 +364,25 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
           let fileMatches = 0;
           for (const sheetName of wb.SheetNames) {
             const ws = wb.Sheets[sheetName];
-            const csv = XLSX.utils.sheet_to_csv(ws, { FS: ',', RS: '\\n' });
+            const csv = XLSX.utils.sheet_to_csv(ws, { FS: ',', RS: '\n' });
             const text = caseFoldEl.checked ? csv.toUpperCase() : csv;
             const matches = text.match(rx) || [];
             matches.forEach(m => collected.push(trimEl.checked ? m.trim() : m));
             fileMatches += matches.length;
           }
           totalMatches += fileMatches;
-          logEl.textContent += `✔ ${name}: ${fileMatches} código(s)\\n`;
+          logEl.textContent += `✔ ${name}: ${fileMatches} código(s)\n`;
         } catch {
+          // tentar como CSV puro
           try {
             const txt = new TextDecoder().decode(buf);
             const text = caseFoldEl.checked ? txt.toUpperCase() : txt;
             const matches = text.match(rx) || [];
             matches.forEach(m => collected.push(trimEl.checked ? m.trim() : m));
             totalMatches += matches.length;
-            logEl.textContent += `✔ ${name} (CSV): ${matches.length} código(s)\\n`;
+            logEl.textContent += `✔ ${name} (CSV): ${matches.length} código(s)\n`;
           } catch {
-            logEl.textContent += `✖ ${name}: erro ao ler arquivo.\\n`;
+            logEl.textContent += `✖ ${name}: erro ao ler arquivo.\n`;
           }
         }
       }
@@ -380,7 +401,7 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
 
     // Ações extrator
     btnCopy.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(outputEl.value); statusEl.textContent = 'Códigos copiados.'; } 
+      try { await navigator.clipboard.writeText(outputEl.value); statusEl.textContent = 'Códigos copiados.'; }
       catch { statusEl.textContent = 'Não foi possível copiar (permita acesso ao clipboard).'; }
     });
     btnExportCSV.addEventListener('click', () => download('codigos.csv', toCSV(collected), 'text/csv;charset=utf-8'));
@@ -402,13 +423,25 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
       sroList.innerHTML = '';
       const base = sroBaseUrlInput.value.trim();
       const frag = document.createDocumentFragment();
-      codes.forEach(code => { const li = document.createElement('li'); const a = document.createElement('a'); a.href = base + encodeURIComponent(code); a.textContent = code; a.target = '_blank'; a.rel = 'noopener'; li.appendChild(a); frag.appendChild(li); });
+      codes.forEach(code => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = base + encodeURIComponent(code);
+        a.textContent = code;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        li.appendChild(a); frag.appendChild(li);
+      });
       sroList.appendChild(frag);
       btnOpenAll.disabled = codes.length === 0;
     }
     btnGenLinks.addEventListener('click', () => {
-      const lines = sroCodesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-      gerarLinks([...new Set(lines)]);
+      const lines = sroCodesInput.value
+        .split(/\r?\n/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      const unique = [...new Set(lines)];
+      gerarLinks(unique);
     });
     btnOpenAll.addEventListener('click', async () => {
       const links = Array.from(sroList.querySelectorAll('a')); if (!links.length) return;
@@ -435,7 +468,10 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
 
       function getCodes(){
         if (useExtracted.checked && collected.length) return [...new Set(collected)];
-        const lines = (codesManual.value||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+        const lines = (codesManual.value || '')
+          .split(/\r?\n/)
+          .map(s => s.trim())
+          .filter(Boolean);
         return [...new Set(lines)];
       }
       function mapItem(r){
@@ -475,15 +511,13 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
           lastAuto = filtrar(mapped);
           render(lastAuto);
           autoStatus.textContent = `OK — ${lastAuto.length} item(ns).`;
-        } catch {
-          autoStatus.textContent = 'Erro ao consultar. Verifique o proxy interno (/api/rastrear).';
-        }
+        } catch { autoStatus.textContent = 'Erro ao consultar. Verifique o proxy interno (/api/rastrear).'; }
       });
       btnExportAutoCSV.addEventListener('click', () => { const ws = XLSX.utils.json_to_sheet(lastAuto); const csv = XLSX.utils.sheet_to_csv(ws); download('relatorio_auto.csv', csv, 'text/csv;charset=utf-8'); });
       btnExportAutoXLSX.addEventListener('click', () => { const ws = XLSX.utils.json_to_sheet(lastAuto); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'relatorio'); const out = XLSX.write(wb, { bookType:'xlsx', type:'array' }); const blob = new Blob([out], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='relatorio_auto.xlsx'; a.click(); URL.revokeObjectURL(url); });
     })();
 
-    // ===== RASTREAMENTO POR CSV (SEM TI) + E-MAIL =====
+    // ===== Rastreamento por CSV (sem TI) + e-mail =====
     (function(){
       const csvFile = document.getElementById('csvFile');
       const csvPaste = document.getElementById('csvPaste');
@@ -620,21 +654,21 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
         }
       }
 
-      // Ações do módulo CSV
+      // Processar CSV/XLSX colado ou enviado
       btnCsvProcess.addEventListener('click', async () => {
         let rows = [];
         try {
           if (csvFile.files && csvFile.files[0]) rows = await rowsFromFile(csvFile.files[0]);
           else if (csvPaste.value.trim()) rows = rowsFromCSVText(csvPaste.value);
           else { alert('Selecione um arquivo ou cole o conteúdo CSV.'); return; }
-        } catch (e) { alert('Não foi possível ler o arquivo/conteúdo.'); return; }
+        } catch { alert('Não foi possível ler o arquivo/conteúdo.'); return; }
 
         rows = rows.map(r => { const nr={}; Object.keys(r).forEach(k=>nr[normalizeHeader(k)]=r[k]); return nr; });
         const mapped = applyMap(rows);
         const filtered = filterRows(mapped);
         csvReport = filtered.map(r => ({ codigo: r.codigo, prazo_maximo: r.prazo_maximo, em_transito_para: r.em_transito_para }));
         render(csvReport);
-        document.getElementById('emailPreviewWrap').classList.add('hidden');
+        emailPreviewWrap.classList.add('hidden');
       });
 
       btnCsvExportX.addEventListener('click', () => exportRelXLSX(csvReport));
@@ -645,12 +679,10 @@ LB123...,SEDEX,RN,2025-10-28,CDD MOSSORO"></textarea>
         emailPreview.innerHTML = html;
         emailPreviewWrap.classList.remove('hidden');
       });
-
       btnCopyEmail.addEventListener('click', async () => {
         try { await copyHTML(emailPreview.innerHTML); alert('E-mail copiado (HTML). Cole no corpo do seu e-mail.'); }
         catch { alert('Não foi possível copiar como HTML. Selecione e copie manualmente a prévia.'); }
       });
-
       btnCopySubject.addEventListener('click', async () => {
         const subject = `SEDEX ESTADUAL – PRAZO ${todayBR()} (REATE-02)`;
         try { await navigator.clipboard.writeText(subject); alert('Assunto copiado.'); }
