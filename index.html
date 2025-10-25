@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Extrator de Códigos de Planilhas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <div class="max-w-5xl mx-auto p-6">
+    <header class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold">Extrator de Códigos de Planilhas</h1>
+      <p class="text-sm md:text-base text-slate-600 mt-1">
+        Carregue várias planilhas (.xlsx, .xls, .csv). O app lê todas as abas e extrai códigos usando regex configurável.
+        Tudo roda localmente — ideal para uso no GitHub Pages.
+      </p>
+    </header>
+
+    <section class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-2xl shadow p-4">
+        <h2 class="font-semibold mb-3">Padrão de extração</h2>
+        <label class="block text-sm mb-1">Preset</label>
+        <select id="preset" class="w-full border rounded-lg p-2">
+          <option value="sro">SRO (AA123456789BR)</option>
+          <option value="digits">Somente números (8–13 dígitos)</option>
+          <option value="alnum">Alfanumérico (10+ caracteres)</option>
+          <option value="custom">Customizar (regex)</option>
+        </select>
+        <label class="block text-sm mt-3 mb-1">Regex</label>
+        <input id="regexInput" class="w-full border rounded-lg p-2 font-mono"
+          value="\\b[A-Z]{2}\\d{9}[A-Z]{2}\\b" />
+        <div class="flex items-center gap-3 mt-4">
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input id="caseFold" type="checkbox" class="rounded" checked /> Normalizar maiúsculas
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input id="dedupe" type="checkbox" class="rounded" checked /> Remover duplicados
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input id="trimSpaces" type="checkbox" class="rounded" checked /> Aparar espaços
+          </label>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <h2 class="font-semibold mb-3">Arquivos</h2>
+        <label class="block text-sm mb-1">Selecione planilhas (.xlsx, .xls, .csv)</label>
+        <input id="fileInput" type="file" multiple accept=".xlsx,.xls,.csv" class="w-full border rounded-lg p-2" />
+        <div id="dropzone" class="mt-3 border-2 border-dashed rounded-xl p-6 text-center text-slate-500">
+          Arraste e solte arquivos aqui
+        </div>
+        <button id="btnProcess" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+          Processar arquivos
+        </button>
+        <p id="status" class="text-sm text-slate-600 mt-2"></p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-4 mb-6">
+      <h2 class="font-semibold mb-3">Resultados</h2>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <button id="btnCopy"
+          class="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg disabled:opacity-40" disabled>
+          Copiar códigos
+        </button>
+        <button id="btnExportCSV"
+          class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg disabled:opacity-40" disabled>
+          Exportar CSV
+        </button>
+        <button id="btnExportXLSX"
+          class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg disabled:opacity-40" disabled>
+          Exportar XLSX
+        </button>
+        <button id="btnClear" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg">Limpar</button>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-medium mb-2">Códigos extraídos (<span id="count">0</span>)</h3>
+          <textarea id="output" class="w-full h-64 border rounded-lg p-2 font-mono text-sm"
+            placeholder="— vazio —"></textarea>
+        </div>
+        <div>
+          <h3 class="font-medium mb-2">Arquivos lidos & stats</h3>
+          <pre id="log" class="w-full h-64 border rounded-lg p-3 bg-slate-50 overflow-auto text-xs"></pre>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-xs text-slate-500">
+      <p>⚠️ Tudo roda localmente no seu navegador. Nenhum dado é enviado a servidores.</p>
+    </footer>
+  </div>
+
+  <script>
+    function makeRegex(preset, custom) {
+      switch (preset) {
+        case 'sro': return /\b[A-Z]{2}\d{9}[A-Z]{2}\b/g;
+        case 'digits': return /\b\d{8,13}\b/g;
+        case 'alnum': return /\b[A-Z0-9]{10,}\b/gi;
+        default: try { return new RegExp(custom, 'gi'); } catch { return /$a/; }
+      }
+    }
+    function toCSV(rows) { return rows.map(r => `"${String(r).replace(/"/g, '""')}"`).join('\n'); }
+    function download(name, content, mime = 'text/plain;charset=utf-8') {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    const presetEl = document.getElementById('preset'),
+      regexEl = document.getElementById('regexInput'),
+      caseFoldEl = document.getElementById('caseFold'),
+      dedupeEl = document.getElementById('dedupe'),
+      trimEl = document.getElementById('trimSpaces'),
+      fileInput = document.getElementById('fileInput'),
+      dropzone = document.getElementById('dropzone'),
+      btnProcess = document.getElementById('btnProcess'),
+      statusEl = document.getElementById('status'),
+      outputEl = document.getElementById('output'),
+      countEl = document.getElementById('count'),
+      logEl = document.getElementById('log'),
+      btnCopy = document.getElementById('btnCopy'),
+      btnExportCSV = document.getElementById('btnExportCSV'),
+      btnExportXLSX = document.getElementById('btnExportXLSX'),
+      btnClear = document.getElementById('btnClear');
+
+    let collected = [];
+
+    function updateUI() {
+      outputEl.value = collected.join('\n');
+      countEl.textContent = collected.length;
+      [btnCopy, btnExportCSV, btnExportXLSX].forEach(b => b.disabled = !collected.length);
+    }
+
+    btnProcess.addEventListener('click', async () => {
+      const files = Array.from(fileInput.files || []);
+      if (!files.length) { statusEl.textContent = 'Selecione ao menos um arquivo.'; return; }
+      collected = []; updateUI(); logEl.textContent = ''; statusEl.textContent = 'Processando...';
+      const rx = makeRegex(presetEl.value, regexEl.value);
+      for (const f of files) {
+        try {
+          const buf = await f.arrayBuffer();
+          const wb = XLSX.read(buf, { type: 'array' });
+          let matches = [];
+          wb.SheetNames.forEach(s => {
+            const csv = XLSX.utils.sheet_to_csv(wb.Sheets[s]);
+            const text = caseFoldEl.checked ? csv.toUpperCase() : csv;
+            matches = matches.concat(text.match(rx) || []);
+          });
+          matches.forEach(m => collected.push(trimEl.checked ? m.trim() : m));
+          logEl.textContent += `✔ ${f.name}: ${matches.length} códigos\n`;
+        } catch (err) {
+          logEl.textContent += `✖ ${f.name}: erro ao ler\n`;
+        }
+      }
+      if (dedupeEl.checked) collected = [...new Set(collected)];
+      updateUI();
+      statusEl.textContent = `Concluído. ${collected.length} código(s) único(s).`;
+    });
+
+    btnCopy.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(outputEl.value);
+      statusEl.textContent = 'Códigos copiados!';
+    });
+    btnExportCSV.addEventListener('click', () => download('codigos.csv', toCSV(collected), 'text/csv;charset=utf-8'));
+    btnExportXLSX.addEventListener('click', () => {
+      const ws = XLSX.utils.aoa_to_sheet([["codigo"], ...collected.map(c => [c])]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'codigos');
+      const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'codigos.xlsx'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    btnClear.addEventListener('click', () => {
+      collected = []; updateUI(); logEl.textContent = ''; statusEl.textContent = 'Limpo.';
+    });
+  </script>
+</body>
+</html>
